@@ -1,3 +1,3 @@
 
 # Project-1---Tetris-Game
-<a href="./index.html">teste</a>
+<a href="https://namiabe.github.io/Tetris-Game/">teste</a>

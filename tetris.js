@@ -14,7 +14,7 @@ function drawSquare(x, y, color) {
   ctx.fillStyle = color;
   ctx.fillRect(x * squareSize, y * squareSize, squareSize, squareSize);
   ctx.lineWidth = 1;
-  ctx.strokeStyle = 'black';
+  ctx.strokeStyle = 'palevioletred';
   ctx.strokeRect(x * squareSize, y * squareSize, squareSize, squareSize);
 }
 

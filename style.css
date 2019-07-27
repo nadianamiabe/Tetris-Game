@@ -15,6 +15,7 @@ h2 {
 canvas {
     display: block;
     margin: 0 auto;
+    border: 2px solid pink;
 }
 
 #container {
@@ -29,11 +30,13 @@ canvas {
 }
 
 #second-section {  
-    margin: 35px 30px 260px 30px;
+    margin: 30px 30px 260px 30px;
     flex-direction: row;
     justify-items: end;
     font-family: monospace; 
     border: 3px solid pink;
+    color: rgb(238, 232, 232);
+    background-color: palevioletred;
 }
 
 #first-section {
