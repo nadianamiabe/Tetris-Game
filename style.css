@@ -6,8 +6,12 @@ body {
     font-size: 25px;
     font-weight: bold;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    margin: 15px;
 }
-
+h2 {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    padding-left:30px;
+}
 canvas {
     display: block;
     margin: 0 auto;
@@ -25,8 +29,8 @@ canvas {
 }
 
 #second-section {  
-    padding: 10px;
-    margin: 35px 0 260px 30px;
+    /* padding: 20px; */
+    margin: 35px 30px 260px 30px;
     flex-direction: row;
     justify-items: end;
     font-family: monospace; 
@@ -34,9 +38,9 @@ canvas {
 }
 
 #first-section {
-    border: 3px solid pink;
-    margin-top: 50px;
-    margin-bottom: 50px;
+    margin: 50px 30px 50px 30px;
+    /* margin-top: 50px;
+    margin-bottom: 50px; */
 
 }
 
