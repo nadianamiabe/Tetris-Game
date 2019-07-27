@@ -230,27 +230,26 @@ function drop() {
     if (delta > 1000) {
       p.moveDown();
       dropStart = Date.now();
+      levelElement.innerHTML = 1;
     }
     if (update) {
       if (delta > 700) {
         p.moveDown();
         dropStart = Date.now();
-        levelElement.innerHTML = 1;
+        levelElement.innerHTML = 2;
       }
     }
     if (update2) {
       if (delta > 500) {
         p.moveDown();
         dropStart = Date.now();
-        levelElement.innerHTML = 2;
+        levelElement.innerHTML = 3;
       }
     }
     if (!gameOver) {
       requestAnimationFrame(drop);
     }
-    console.log('chamou!')
   }
-  console.log('nao chamou')
 }
 
 drop();
