@@ -1,20 +1,20 @@
-const canvas = document.getElementById('tetris');
-const ctx = canvas.getContext('2d');
-const scoreElement = document.getElementById('score');
-const lineElement = document.getElementById('line');
-const levelElement = document.getElementById('level');
-
+const canvas = document.getElementById("tetris");
+const ctx = canvas.getContext("2d");
+const scoreElement = document.getElementById("score");
+const lineElement = document.getElementById("line");
+const levelElement = document.getElementById("level");
+  
 
 const row = 20;
 const col = 10;
 const squareSize = 20;
-const vacant = 'rgb(219,112,147)'; // empty square
+const vacant = "rgb(219,112,147)"; // empty square
 
 function drawSquare(x, y, color) {
   ctx.fillStyle = color;
   ctx.fillRect(x * squareSize, y * squareSize, squareSize, squareSize);
   ctx.lineWidth = 1;
-  ctx.strokeStyle = 'palevioletred';
+  ctx.strokeStyle = "palevioletred";
   ctx.strokeRect(x * squareSize, y * squareSize, squareSize, squareSize);
 }
 
@@ -37,13 +37,13 @@ function drawBoard() {
 drawBoard();
 
 const pieces = [
-  [Z, '#8B008B'],
-  [S, '#20B2AA'],
-  [T, '#7B68EE'],
-  [O, '#9932CC'],
-  [J, '#7FFFD4'],
-  [L, '#66CDAA'],
-  [I, '#4B0082'],
+  [Z, "#8B008B"],
+  [S, "#20B2AA"],
+  [T, "#7B68EE"],
+  [O, "#9932CC"],
+  [J, "#7FFFD4"],
+  [L, "#66CDAA"],
+  [I, "#4B0082"]
 ];
 
 function randomPiece() {
@@ -63,7 +63,7 @@ function Piece(tetromino, color) {
   this.x = 3;
   this.y = -2;
 }
-Piece.prototype.fill = function (color) {
+Piece.prototype.fill = function(color) {
   for (r = 0; r < this.activeTetromino.length; r++) {
     for (c = 0; c < this.activeTetromino.length; c++) {
       if (this.activeTetromino[r][c]) {
@@ -73,15 +73,15 @@ Piece.prototype.fill = function (color) {
   }
 };
 
-Piece.prototype.draw = function () {
+Piece.prototype.draw = function() {
   this.fill(this.color);
 };
 
-Piece.prototype.unDraw = function () {
+Piece.prototype.unDraw = function() {
   this.fill(vacant);
 };
 
-Piece.prototype.moveDown = function () {
+Piece.prototype.moveDown = function() {
   if (!this.collision(0, 1, this.activeTetromino)) {
     this.unDraw();
     this.y++;
@@ -92,7 +92,7 @@ Piece.prototype.moveDown = function () {
   }
 };
 
-Piece.prototype.moveRight = function () {
+Piece.prototype.moveRight = function() {
   if (!this.collision(1, 0, this.activeTetromino)) {
     this.unDraw();
     this.x++;
@@ -100,7 +100,7 @@ Piece.prototype.moveRight = function () {
   }
 };
 
-Piece.prototype.moveLeft = function () {
+Piece.prototype.moveLeft = function() {
   if (!this.collision(-1, 0, this.activeTetromino)) {
     this.unDraw();
     this.x--;
@@ -108,8 +108,10 @@ Piece.prototype.moveLeft = function () {
   }
 };
 
-Piece.prototype.rotate = function () {
-  const nextPattern = this.tetromino[(this.tetrominoN + 1) % this.tetromino.length];
+Piece.prototype.rotate = function() {
+  const nextPattern = this.tetromino[
+    (this.tetrominoN + 1) % this.tetromino.length
+  ];
   let kick = 0;
   if (this.collision(0, 0, nextPattern)) {
     if (this.x > col / 2) {
@@ -129,14 +131,14 @@ Piece.prototype.rotate = function () {
 
 let score = 0;
 let line = 0;
-Piece.prototype.lock = function () {
+Piece.prototype.lock = function() {
   for (r = 0; r < this.activeTetromino.length; r++) {
     for (c = 0; c < this.activeTetromino.length; c++) {
       if (!this.activeTetromino[r][c]) {
         continue;
       }
       if (this.y + r < 0) {
-        alert('Game Over');
+        alert("Game Over");
         gameOver = true;
         break;
       }
@@ -147,7 +149,7 @@ Piece.prototype.lock = function () {
   for (r = 0; r < row; r++) {
     let isRowFull = true;
     for (c = 0; c < col; c++) {
-      isRowFull = isRowFull && (board[r][c] != vacant);
+      isRowFull = isRowFull && board[r][c] != vacant;
     }
     if (isRowFull) {
       for (y = r; y > 1; y--) {
@@ -176,7 +178,7 @@ Piece.prototype.lock = function () {
   lineElement.innerHTML = line;
 };
 
-Piece.prototype.collision = function (x, y, piece) {
+Piece.prototype.collision = function(x, y, piece) {
   for (r = 0; r < piece.length; r++) {
     for (c = 0; c < piece.length; c++) {
       if (!piece[r][c]) {
@@ -201,7 +203,7 @@ Piece.prototype.collision = function (x, y, piece) {
   return false;
 };
 
-document.addEventListener('keydown', control);
+document.addEventListener("keydown", control);
 
 function control(event) {
   if (event.keyCode == 37) {
@@ -264,3 +266,4 @@ function drop() {
 }
 
 drop();
+
