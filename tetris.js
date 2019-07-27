@@ -1,100 +1,97 @@
-const canvas = document.getElementById('tetris');
-const ctx = canvas.getContext('2d');
+const canvas = document.getElementById("tetris");
+const ctx = canvas.getContext("2d");
+const scoreElement = document.getElementById("score");
+const lineElement = document.getElementById("line");
 
-const squareSize = 20;
+
 const row = 20;
 const col = 10;
-const vacant = '#FFF'; // empty square
+const squareSize = 20;
+const vacant = "rgb(219,112,147)"; // empty square
 
-// draw a square
 function drawSquare(x, y, color) {
-  // x is the number of sq from the left and y is the number of sq from the top
   ctx.fillStyle = color;
   ctx.fillRect(x * squareSize, y * squareSize, squareSize, squareSize);
-
-  ctx.strokeStyle = 'black'; // border's color
+  ctx.lineWidth = 1;
+  ctx.strokeStyle = "black";
   ctx.strokeRect(x * squareSize, y * squareSize, squareSize, squareSize);
 }
 
-// create the board
-const board = [];
-// when we create the board game, every square are empty, so each one are white
-for (let r = 0; r < row; r++) {
+let board = [];
+for (r = 0; r < row; r++) {
   board[r] = [];
-  for (let c = 0; c < col; c++) {
+  for (c = 0; c < col; c++) {
     board[r][c] = vacant;
   }
 }
 
-// draw the board
 function drawBoard() {
   for (r = 0; r < row; r++) {
     for (c = 0; c < col; c++) {
-      drawSquare(c, r, board[r][c]); // c = x, r = y, board[r][c] = color
+      drawSquare(c, r, board[r][c]);
     }
   }
 }
 
 drawBoard();
 
-// the object Piece
-function Piece(Tetromino, color) {
+let pieces = [
+  [Z, "#EE3A8C"],
+  [S, "#00BFFF"],
+  [T, "#00FA9A"],
+  [O, "#FF0000"],
+  [J, "#FF1493"],
+  [L, "#FF8C00"],
+  [I, "#9400D3"]
+];
+
+function randomPiece() {
+  let r = Math.floor(Math.random() * pieces.length);
+  return new Piece(pieces[r][0], pieces[r][1]);
+}
+
+let p = randomPiece();
+
+function Piece(tetromino, color) {
   this.tetromino = tetromino;
-  this.tetrominoN = 0; // index 0
-  this.activeTetromino = this.tetromino[this.tetrominoN]; // example = z[0]
   this.color = color;
-  // inicialization position
+
+  this.tetrominoN = 0;
+  this.activeTetromino = this.tetromino[this.tetrominoN];
+
   this.x = 3;
   this.y = -2;
 }
-
-Piece.prototype.fill = function () {
+Piece.prototype.fill = function(color) {
   for (r = 0; r < this.activeTetromino.length; r++) {
     for (c = 0; c < this.activeTetromino.length; c++) {
       if (this.activeTetromino[r][c]) {
-        drawSquare(this.x + c, this.y + r, this.color);
+        drawSquare(this.x + c, this.y + r, color);
       }
     }
   }
 };
 
-// draw a piece to the board
-Piece.prototype.draw = function () {
-  // for (r = 0; r < this.activeTetromino.length; r++) {
-  //   for (c = 0; c < this.activeTetromino.length; c++) {
-  //     if (this.activeTetromino[r][c]) {
-  //       drawSquare(this.x + c, this.y + r, this.color);
-  //     }
-  //   }
-  // }
+Piece.prototype.draw = function() {
   this.fill(this.color);
 };
 
-// unDraw a piece
-Piece.prototype.unDraw = function () {
-  // for (r = 0; r < this.activeTetromino.length; r++) {
-  //   for (c = 0; c < this.activeTetromino.length; c++) {
-  //     if (this.activeTetromino[r][c]) {
-  //       drawSquare(this.x + c, this.y + r, vacant);
-  //     }
-  //   }
-  // }
+Piece.prototype.unDraw = function() {
   this.fill(vacant);
 };
 
-// move Down the Piece
-Piece.prototype.moveDown = function () {
+Piece.prototype.moveDown = function() {
   if (!this.collision(0, 1, this.activeTetromino)) {
     this.unDraw();
     this.y++;
     this.draw();
   } else {
     this.lock();
-    piece = randomPiece();
+    p = randomPiece();
   }
 };
 
-Piece.prototype.moveRight = function () {
+Piece.prototype.moveRight = function() {
   if (!this.collision(1, 0, this.activeTetromino)) {
     this.unDraw();
     this.x++;
@@ -102,7 +99,7 @@ Piece.prototype.moveRight = function () {
   }
 };
 
-Piece.prototype.moveLeft = function () {
+Piece.prototype.moveLeft = function() {
   if (!this.collision(-1, 0, this.activeTetromino)) {
     this.unDraw();
     this.x--;
@@ -110,54 +107,129 @@ Piece.prototype.moveLeft = function () {
   }
 };
 
-Piece.prototype.rotate = function () {
+Piece.prototype.rotate = function() {
   let nextPattern = this.tetromino[(this.tetrominoN + 1) % this.tetromino.length];
   let kick = 0;
-  if (this.collision(0, 0, nextPattern)){
-    if (this.x > col/2) {
+  if (this.collision(0, 0, nextPattern)) {
+    if (this.x > col / 2) {
       kick = -1;
     } else {
       kick = 1;
-    } 
+    }
   }
-  if (!this.collision(0, 0, nextPattern)) {
+  if (!this.collision(kick, 0, nextPattern)) {
     this.unDraw();
     this.x += kick;
     this.tetrominoN = (this.tetrominoN + 1) % this.tetromino.length;
     this.activeTetromino = this.tetromino[this.tetrominoN];
     this.draw();
   }
-}
+};
 
-Piece.prototype.lock = function () {
-  for (r = 0; r < this.activeTetromino.length; r++){
-    for (c = 0; c < this.activeTetromino.length; c++){
-      if (this.activeTetromino[r][c]) continue;
-      if (this.y + r < 0){
-        gameOver = true;
+let score = 0;
+let line = 0;
+Piece.prototype.lock = function() {
+  for (r = 0; r < this.activeTetromino.length; r++) {
+    for (c = 0; c < this.activeTetromino.length; c++) {
+      if (!this.activeTetromino[r][c]) {
+        continue;
+      }
+      if (this.y + r < 0) {
         alert("Game Over");
+        gameOver = true;
         break;
       }
       board[this.y + r][this.x + c] = this.color;
     }
-    
   }
-  
-}
+  score += 10;
+  for (r = 0; r < row; r++) {
+    let isRowFull = true;
+    for (c = 0; c < col; c++) {
+      isRowFull = isRowFull && (board[r][c] != vacant);
+    }
+    if (isRowFull) {
+      for (y = r; y > 1; y--) {
+        for (c = 0; c < col; c++) {
+          board[y][c] = board[y-1][c];
+        }
+      }
+      for (c = 0; c < col; c++) {
+        board[0][c] = vacant;
+      }
+      score += 100;
+      line += 1;
+    }
+    if (score > 500) {
+      update = true;
+    }
+  }
+  drawBoard();
+  scoreElement.innerHTML = score;
+  lineElement.innerHTML = line;
+};
 
-Piece.prototype.collision = function (x, y, piece) {
+Piece.prototype.collision = function(x, y, piece) {
   for (r = 0; r < piece.length; r++) {
     for (c = 0; c < piece.length; c++) {
-      if (!piece[r][c]) continue;
-
+      if (!piece[r][c]) {
+        continue;
+      }
       let newX = this.x + c + x;
       let newY = this.y + r + y;
-      if (newX < 0 || newX >= col || newY > row) return true;
-      if (newY = 0) continue;
-      if (board[newX][newY] != vacant) return true;
+
+      if (newX < 0 || newX >= col || newY >= row) {
+        return true;
+      }
+
+      if (newY < 0) {
+        continue;
+      }
+
+      if (board[newY][newX] != vacant) {
+        return true;
+      }
     }
   }
   return false;
+};
+
+document.addEventListener("keydown", control);
+
+function control(event) {
+  if (event.keyCode == 37) {
+    p.moveLeft();
+    dropStart = Date.now();
+  } else if (event.keyCode == 38) {
+    p.rotate();
+    dropStart = Date.now();
+  } else if (event.keyCode == 39) {
+    p.moveRight();
+    dropStart = Date.now();
+  } else if (event.keyCode == 40) {
+    p.moveDown();
+  }
 }
 
+let dropStart = Date.now();
+let gameOver = false;
+let update = false;
+function drop() {
+  let now = Date.now();
+  let delta = now - dropStart;
+  if (delta > 1000) {
+    p.moveDown();
+    dropStart = Date.now();
+  }
+  if (update) {
+    if (delta > 500) {
+      p.moveDown();
+      dropStart = Date.now();
+    }
+  }
+  if (!gameOver) {
+    requestAnimationFrame(drop);
+  }
+}
 
+drop();

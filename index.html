@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,9 +8,26 @@
     <link rel="stylesheet" href="./style.css">
     <title>Tetris Game</title>
 </head>
+
 <body>
-    <canvas id="tetris" width="200" height="400"></canvas>
+    <div id="container">
+        <div id="first-section">
+            <!-- <img src="./TETRIS_LOGO_2019.jpg" alt="tetris logo" height="150px"> -->
+
+            <div>
+                Score: <div id="score">0</div>
+            </div>
+
+            <div>
+                Line: <div id="line">0</div>
+            </div>
+        </div>
+        <div id="second-section">
+            <canvas id="tetris" width="200" height="400"></canvas>
+        </div>
+    </div>
     <script src="./tetrominos.js"></script>
     <script src="./tetris.js"></script>
 </body>
+
 </html>
