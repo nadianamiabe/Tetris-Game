@@ -5,11 +5,11 @@ body {
 .score-element {
     font-size: 25px;
     font-weight: bold;
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-family: monospace;
     margin: 15px;
 }
 h2 {
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-family: monospace;
     padding-left:30px;
 }
 canvas {
@@ -29,7 +29,6 @@ canvas {
 }
 
 #second-section {  
-    /* padding: 20px; */
     margin: 35px 30px 260px 30px;
     flex-direction: row;
     justify-items: end;
@@ -39,8 +38,6 @@ canvas {
 
 #first-section {
     margin: 50px 30px 50px 30px;
-    /* margin-top: 50px;
-    margin-bottom: 50px; */
 
 }
 
