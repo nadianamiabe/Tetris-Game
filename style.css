@@ -62,9 +62,9 @@ h2 {
 } */
 
 @media screen and (max-device-width: 700px) {
-    #container {min-width: 500px}
+    #container {min-width: 300px}
 }
 
 @media screen and (max-device-width: 2000px) {
-    #container {width: 800px}
+    #container {width: 600px}
 }
