@@ -12,18 +12,21 @@
 <body>
     <div id="container">
         <div id="first-section">
-            <!-- <img src="./TETRIS_LOGO_2019.jpg" alt="tetris logo" height="150px"> -->
+            <canvas id="tetris" width="200" height="400"></canvas>
+        </div>
+        <div id="second-section">
 
-            <div>
+            <div class=score-element>
                 Score: <div id="score">0</div>
             </div>
 
-            <div>
+            <div class=score-element>
                 Line: <div id="line">0</div>
             </div>
-        </div>
-        <div id="second-section">
-            <canvas id="tetris" width="200" height="400"></canvas>
+
+            <div class=score-element>
+                Level: <div id="level">0</div>
+            </div>
         </div>
     </div>
     <script src="./tetrominos.js"></script>

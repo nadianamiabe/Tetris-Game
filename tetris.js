@@ -2,6 +2,7 @@ const canvas = document.getElementById("tetris");
 const ctx = canvas.getContext("2d");
 const scoreElement = document.getElementById("score");
 const lineElement = document.getElementById("line");
+const levelElement = document.getElementById("level");
 
 
 const row = 20;
@@ -36,13 +37,13 @@ function drawBoard() {
 drawBoard();
 
 let pieces = [
-  [Z, "#EE3A8C"],
-  [S, "#00BFFF"],
-  [T, "#00FA9A"],
-  [O, "#FF0000"],
-  [J, "#FF1493"],
-  [L, "#FF8C00"],
-  [I, "#9400D3"]
+  [Z, "#00CED1"],
+  [S, "#20B2AA"],
+  [T, "#008B8B"],
+  [O, "#008080"],
+  [J, "#7FFFD4"],
+  [L, "#66CDAA"],
+  [I, "#5F9EA0"]
 ];
 
 function randomPiece() {
@@ -160,8 +161,11 @@ Piece.prototype.lock = function() {
       score += 100;
       line += 1;
     }
-    if (score > 500) {
+    if (score > 1000) {
       update = true;
+    }
+    if (score > 2000) {
+      update2 = true;
     }
   }
   drawBoard();
@@ -208,28 +212,45 @@ function control(event) {
     dropStart = Date.now();
   } else if (event.keyCode == 40) {
     p.moveDown();
+  } else if (event.keyCode == 32) {
+    startGame = true;
+    drop();
   }
 }
-
+let startGame = false;
 let dropStart = Date.now();
 let gameOver = false;
 let update = false;
+let update2 = false;
+
 function drop() {
   let now = Date.now();
   let delta = now - dropStart;
-  if (delta > 1000) {
-    p.moveDown();
-    dropStart = Date.now();
-  }
-  if (update) {
-    if (delta > 500) {
+  if (startGame) {
+    if (delta > 1000) {
       p.moveDown();
       dropStart = Date.now();
     }
+    if (update) {
+      if (delta > 700) {
+        p.moveDown();
+        dropStart = Date.now();
+        levelElement.innerHTML = 1;
+      }
+    }
+    if (update2) {
+      if (delta > 500) {
+        p.moveDown();
+        dropStart = Date.now();
+        levelElement.innerHTML = 2;
+      }
+    }
+    if (!gameOver) {
+      requestAnimationFrame(drop);
+    }
+    console.log('chamou!')
   }
-  if (!gameOver) {
-    requestAnimationFrame(drop);
-  }
+  console.log('nao chamou')
 }
 
 drop();
