@@ -3,12 +3,47 @@ const ctx = canvas.getContext("2d");
 const scoreElement = document.getElementById("score");
 const lineElement = document.getElementById("line");
 const levelElement = document.getElementById("level");
-  
+ 
+const secondCanvas = document.getElementById('second-canvas');
+const secondCtx = secondCanvas.getContext('2d');
+
+const viewPieceRow = 5;
+const viewPieceCol = 5;
+const sq = 20;
+
+const row2 = 5;
+const col2 = 5;
+const vacant2 = "rgb(219,112,147)";
 
 const row = 20;
 const col = 10;
 const squareSize = 20;
-const vacant = "rgb(219,112,147)"; // empty square
+const vacant = "rgb(219,112,147)";
+
+function drawSquare2(x, y, color) {
+  secondCtx.fillStyle = color;
+  secondCtx.fillRect(x * sq, y * sq, sq, sq);
+  secondCtx.lineWidth = 1;
+  secondCtx.strokeStyle = "palevioletred";
+  secondCtx.strokeRect(x * sq, y * sq, sq, sq);
+}
+
+const board2 = [];
+for (r = 0; r < row2; r++) {
+  board2[r] = [];
+  for (c = 0; c < col2; c++) {
+    board2[r][c] = vacant2;
+  }
+}
+function drawBoard2() {
+  for (let r = 0; r < row2; r++) {
+    for (let c = 0; c < col2; c++) {
+      drawSquare2(c, r, board2[r][c]);
+    }
+  }
+}
+
+drawBoard2();
 
 function drawSquare(x, y, color) {
   ctx.fillStyle = color;
@@ -52,6 +87,9 @@ function randomPiece() {
 }
 
 let p = randomPiece();
+let p2 = randomPiece();
+
+const gamePieces = [p, p2];
 
 function Piece(tetromino, color) {
   this.tetromino = tetromino;
@@ -73,6 +111,16 @@ Piece.prototype.fill = function(color) {
   }
 };
 
+Piece.prototype.fill2 = function(color) {
+  for (r = 0; r < this.activeTetromino.length; r++) {
+    for (c = 0; c < this.activeTetromino.length; c++) {
+      if (this.activeTetromino[r][c]) {
+        drawSquare2(1 + c, 1 + r, color);
+      }
+    }
+  }
+};
+
 Piece.prototype.draw = function() {
   this.fill(this.color);
 };
@@ -81,14 +129,31 @@ Piece.prototype.unDraw = function() {
   this.fill(vacant);
 };
 
+Piece.prototype.draw2 = function() {
+  this.fill2(this.color);
+};
+
+Piece.prototype.unDraw2 = function() {
+  secondCtx.clearRect(0, 0, 100, 100);
+
+};
+
+// this.draw2();
+// this.unDraw2();
+
+
 Piece.prototype.moveDown = function() {
-  if (!this.collision(0, 1, this.activeTetromino)) {
-    this.unDraw();
-    this.y++;
-    this.draw();
+  if (!gamePieces[0].collision(0, 1, gamePieces[0].activeTetromino)) {
+    gamePieces[0].unDraw();
+    gamePieces[1].unDraw2();
+    gamePieces[0].y++;
+    gamePieces[0].draw();
+    gamePieces[1].draw2();
   } else {
-    this.lock();
-    p = randomPiece();
+    gamePieces[0].lock();
+    gamePieces.shift();
+    gamePieces.push(randomPiece());
+    console.log('chamou uma nova peça');
   }
 };
 
@@ -138,8 +203,8 @@ Piece.prototype.lock = function() {
         continue;
       }
       if (this.y + r < 0) {
-        alert("Game Over");
         gameOver = true;
+        alert("Game Over");
         break;
       }
       board[this.y + r][this.x + c] = this.color;
@@ -205,21 +270,25 @@ Piece.prototype.collision = function(x, y, piece) {
 
 document.addEventListener("keydown", control);
 
+let pause = false;
 function control(event) {
-  if (event.keyCode == 37) {
-    p.moveLeft();
-    dropStart = Date.now();
-  } else if (event.keyCode == 38) {
-    p.rotate();
-    dropStart = Date.now();
-  } else if (event.keyCode == 39) {
-    p.moveRight();
-    dropStart = Date.now();
-  } else if (event.keyCode == 40) {
-    p.moveDown();
-  } else if (event.keyCode == 13) {
+  if (event.keyCode == 13) {
     startGame = true;
     drop();
+  }
+  if (startGame) {
+    if (event.keyCode == 37) {
+      gamePieces[0].moveLeft();
+      dropStart = Date.now();
+    } else if (event.keyCode == 38) {
+      gamePieces[0].rotate();
+      dropStart = Date.now();
+    } else if (event.keyCode == 39) {
+      gamePieces[0].moveRight();
+      dropStart = Date.now();
+    } else if (event.keyCode == 40) {
+      gamePieces[0].moveDown();
+    } 
   }
 }
 let startGame = false;
@@ -234,33 +303,34 @@ function drop() {
   const delta = now - dropStart;
   if (startGame) {
     if (delta > 1000) {
-      p.moveDown();
+      gamePieces[0].moveDown();
       dropStart = Date.now();
       levelElement.innerHTML = 1;
     }
     if (update) {
-      if (delta > 700) {
-        p.moveDown();
+      if (delta > 900) {
+        gamePieces[0].moveDown();
         dropStart = Date.now();
         levelElement.innerHTML = 2;
       }
     }
     if (update2) {
-      if (delta > 500) {
-        p.moveDown();
+      if (delta > 800) {
+        gamePieces[0].moveDown();
         dropStart = Date.now();
         levelElement.innerHTML = 3;
       }
     }
     if (update3) {
-      if (delta > 400) {
-        p.moveDown();
+      if (delta > 700) {
+        gamePieces[0].moveDown();
         dropStart = Date.now();
         levelElement.innerHTML = 4;
       }
     }
     if (!gameOver) {
       requestAnimationFrame(drop);
+      console.log('passou');
     }
   }
 }
