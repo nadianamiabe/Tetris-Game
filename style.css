@@ -12,10 +12,16 @@ h2 {
     font-family: monospace;
     padding-left:30px;
 }
-canvas {
+#tetris {
     display: block;
     margin: 0 auto;
     border: 2px solid pink;
+}
+
+#second-canvas {
+    display: block;
+    margin: 0 auto;
+
 }
 
 #container {
@@ -29,7 +35,7 @@ canvas {
 }
 
 #second-section {  
-    margin: 30px 30px 260px 30px;
+    margin: 50px 30px 200px 30px;
     flex-direction: row;
     justify-items: end;
     font-family: monospace; 
